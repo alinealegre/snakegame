@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake Game</title>
+</head>
+<body>
+    <canvas id="stage" width="400" height="400"></canvas>
+    <script type="text/javascript">
+
+        window.onload = function(){
+
+            
+            var stage = document.getElementById('stage');
+            var ctx = stage.getContext("2d");
+            document.addEventListener("keydown", keyPush);
+            setInterval(game, 60);
+
+            const speed = 1;
+            var speedx = speedy = 0;
+            var px = py = 10;
+            var length = 20; 
+            var quantity = 20;
+            var applex = appley = 15;
+
+            var trail = [];
+            var tail = 3;
+
+            function game(){
+                px += speedx;
+                py += speedy;
+
+                if (px < 0){
+                    px = quantity - 1;
+                }
+                if (px > quantity - 1){
+                    px = 0;
+                }
+                if (py < 0){
+                    py = quantity - 1;
+                }
+                if (py > quantity - 1){
+                    py = 0;
+                }
+
+                ctx.fillStyle = "black";
+                ctx.fillRect(0,0, stage.width, stage.height);
+
+                ctx.fillStyle = "red";
+                ctx.fillRect(applex * length, appley * length, length, length);
+
+                ctx.fillStyle = "gray";
+                for (var i = 0; i <trail.length; i++){
+                    ctx.fillRect(trail[i].x  * length, trail[i].y * length, length-1, length-1);
+                    if (trail[i].x == px && trail[i].y == py){
+                        speedx = speedy = 0;
+                        tail = 5;
+                    }
+                }
+
+                trail.push({x:px,y:py})
+                while (trail.length > tail){
+                    trail.shift();
+                }
+
+                if(applex == px && appley == py){
+                    tail++;
+                    applex = Math.floor(Math.random()*quantity);
+                    appley = Math.floor(Math.random()*quantity);
+                }
+            }
+
+            var lastKeyPressed = "";
+
+            function keyPush(event){
+                
+                switch(event.keyCode){
+                    case 37: //Left
+                        if(lastKeyPressed != "right"){
+                        speedx = -speed;
+                        speedy = 0;
+                        lastKeyPressed = "left";
+                        }
+                        break;
+                    case 38: //Up
+                        if(lastKeyPressed != "down"){
+                        speedx = 0;
+                        speedy = -speed;
+                        lastKeyPressed = "up"
+                        }
+                        break;
+                    case 39: //Right
+                        if(lastKeyPressed != "left"){
+                        speedx = speed;
+                        speedy = 0;
+                        lastKeyPressed = "right"
+                        }
+                        break;
+                    case 40: //Down
+                        if(lastKeyPressed != "up"){
+                        speedx = 0;
+                        speedy = speed;
+                        lastKeyPressed = "down"
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            
+
+        }
+    </script>
+</body>
+</html>
